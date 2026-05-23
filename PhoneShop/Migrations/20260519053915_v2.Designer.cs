@@ -11,8 +11,8 @@ using PhoneShop.DB;
 namespace PhoneShop.Migrations
 {
     [DbContext(typeof(PhoneShopDbContext))]
-    [Migration("20260512070246_v1")]
-    partial class v1
+    [Migration("20260519053915_v2")]
+    partial class v2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

@@ -20,6 +20,8 @@ namespace PhoneStore.Areas.Admin.Controllers
         public async Task<IActionResult> Index()
         {
             var products = await db.Products.Include(p => p.Category).ToListAsync();
+            var categories = await db.Categories.ToListAsync();
+            ViewBag.Categories = categories;
             return View(products);
         }
 
@@ -28,6 +30,8 @@ namespace PhoneStore.Areas.Admin.Controllers
             var cats = await db.Categories.Select(c=> new SelectListItem(
                 c.Name,c.Id.ToString())).ToListAsync();
             ViewBag.CategoryId = cats;
+            var categories = await db.Categories.ToListAsync();
+            ViewBag.Categories = categories;
             return View();
         }
         [HttpPost]

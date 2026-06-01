@@ -1,8 +1,252 @@
-﻿@{
+@{
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<!-- banner one start -->
+<div class="xc-banner-one pt-20 pb-40">
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-3 col-xxl-2 d-none d-xl-block">
+                <div class="xc-banner-one__cat">
+                    <ul>
+                        @if (ViewBag.Categories != null)
+                        {
+                            foreach (var category in ViewBag.Categories)
+                            {
+                                <li><a href="#">@category.Name</a></li>
+                            }
+                        }
+                        else
+                        {
+                            <li><a href="#">Fashion & Accessories</a></li>
+                            <li><a href="#">Sports & Entertainment</a></li>
+                            <li><a href="#">Health & Beauty</a></li>
+                            <li><a href="#">Digital & Electronics</a></li>
+                            <li><a href="#">Tools, Equipment</a></li>
+                            <li><a href="#">Sports and Outdoor</a></li>
+                            <li><a href="#">Travel & Accessories</a></li>
+                            <li><a href="#">Machinery tools</a></li>
+                            <li><a href="#">More category</a></li>
+                        }
+                    </ul>
+                </div>
+            </div>
+            <div class="col-12 col-xl-9 col-xxl-10">
+                <div class="xc-main-slider">
+                    <div class="xc-main-slider__carousel swiftcart-owl__carousel owl-carousel" data-owl-options='{
+                        "loop" : true,
+                        "animateOut" : "fadeOut" ,
+                        "animateIn" : "fadeIn" ,
+                        "items" : 1,
+                        "autoplay" : true,
+                        "autoplayTimeout" : 7000,
+                        "smartSpeed" : 1000,
+                        "nav" : false,
+                        "navText" : ["<span class=\"fa-solid fa-chevron-left\"></span>","<span class=\"fa-solid fa-chevron-right\"></span>"],
+                        "dots": false,
+                        "margin": 0
+                        }'>
+
+                        <div class="xc-main-slider__item item">
+                            <div class="xc-main-slider__left">
+                                <div class="xc-main-slider__content">
+                                    <span class="xc-main-slider__subtitle">INTRODUCING NEW</span>
+                                    <h3 class="xc-main-slider__title">Xiaomi Mi 11 Ultra <br> 12GB+256GB</h3>
+                                    <p class="xc-main-slider__info">*Data provided by internal laboratories. Industry measurement.</p>
+                                    <div class="xc-main-slider__btn">
+                                        <a class="swiftcart-btn" asp-controller="Product" asp-action="Details" asp-route-id="5">Shop now <i class="icon-next"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="xc-main-slider__right">
+                                <div class="xc-main-slider__img">
+                                    <img src="~/img/slider/slider-1-1.png" alt="mobile">
+                                    <span class="xc-main-slider__price">$590</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="xc-main-slider__item item">
+                            <div class="xc-main-slider__left">
+                                <div class="xc-main-slider__content">
+                                    <span class="xc-main-slider__subtitle">INTRODUCING NEW</span>
+                                    <h3 class="xc-main-slider__title">iPhone 14 Pro Max <br> 256GB</h3>
+                                    <p class="xc-main-slider__info">Dynamic Island, A16 Bionic chip, 48MP Pro Camera.</p>
+                                    <div class="xc-main-slider__btn">
+                                        <a class="swiftcart-btn" asp-controller="Product" asp-action="Details" asp-route-id="1">Shop now <i class="icon-next"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="xc-main-slider__right">
+                                <div class="xc-main-slider__img">
+                                    <img src="~/img/slider/slider-1-2.png" alt="mobile">
+                                    <span class="xc-main-slider__price">$999</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+<!-- banner one end -->
+
+<!-- offer one start -->
+<div class="xc-offer-one pb-80">
+    <div class="container">
+        <div class="xc-sec-heading">
+            <h3 class="xc-sec-heading__title"><span><i class="icon-power"></i></span>Flash Sale</h3>
+        </div>
+        <div class="xc-offer-one__wrap bg-white">
+            <div class="row align-items-md-center">
+                <div class="col-xl-4">
+                    <div class="xc-offer-one__timer">
+                        <h3 class="xc-offer-one__title">Deals and offers</h3>
+                        <p class="xc-oofer-one__info">High quality smartphones</p>
+                        <div class="xc-offer-one__countdown" data-countdown data-date="Dec 31 2026 20:20:22">
+                            <div class="xc-offer-one__countdown-inner">
+                                <ul>
+                                    <li><span data-days>0</span> Days</li>
+                                    <li><span data-hours>0</span> Hrs</li>
+                                    <li><span data-minutes>0</span> Min</li>
+                                    <li><span data-seconds>0</span> Sec</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-8">
+                    <div class="xc-offer-one__cats">
+                        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 row-cols-lg-4 g-2">
+                            @if (ViewBag.Products != null)
+                            {
+                                int count = 0;
+                                foreach (var product in ViewBag.Products)
+                                {
+                                    if (product.PriceSale < product.Price)
+                                    {
+                                        if (count++ >= 4) break;
+                                        var discount = (int)(100 - (product.PriceSale / product.Price * 100));
+                                        <div class="col">
+                                            <div class="xc-offer-one__cat text-center p-3 border rounded bg-light">
+                                                <img src="~/img/products/@product.Photo" alt="@product.Name" style="max-height: 80px; object-fit: contain; margin-bottom: 10px;">
+                                                <h4 class="xc-offer-one__cat-title" style="font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 5px;">
+                                                    <a asp-controller="Product" asp-action="Details" asp-route-id="@product.Id">@product.Name</a>
+                                                </h4>
+                                                <span class="badge bg-danger">-@discount%</span>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- offer one end -->
+
+<!-- sale one start -->
+<div class="xc-sale-one pb-80">
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-4 d-none d-xl-block">
+                <div class="xc-sale-one__banner h-100">
+                    <a asp-controller="Product" asp-action="Details" asp-route-id="1">
+                        <img src="~/img/resourse/flash-sale-1-1.jpg" alt="sale" class="w-100 h-100" style="object-fit: cover; border-radius: 8px;">
+                    </a>
+                </div>
+            </div>
+            <div class="col-xl-8">
+                <div class="xc-product-one__wrapper bg-white p-3 rounded shadow-sm">
+                    <h3 class="mb-4" style="font-size: 18px; font-weight: 700; border-bottom: 2px solid #eaeaea; padding-bottom: 10px;">Trending Products</h3>
+                    <div class="row g-2">
+                        @if (ViewBag.Products != null)
+                        {
+                            int count = 0;
+                            foreach (var product in ViewBag.Products)
+                            {
+                                if (count++ >= 6) break;
+                                <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+                                    <div class="xc-product-one__item text-center p-2 border rounded">
+                                        <a asp-controller="Product" asp-action="Details" asp-route-id="@product.Id">
+                                            <img src="~/img/products/@product.Photo" alt="@product.Name" style="height: 100px; object-fit: contain; margin-bottom: 8px;">
+                                        </a>
+                                        <h5 class="xc-product-one__price text-primary font-weight-bold" style="font-size: 14px;">$@product.PriceSale</h5>
+                                        <h4 class="xc-product-one__title" style="font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 5px;">
+                                            <a asp-controller="Product" asp-action="Details" asp-route-id="@product.Id">@product.Name</a>
+                                        </h4>
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- sale one end -->
+
+<!-- product two start (Recommended) -->
+<div class="xc-product-two pb-80">
+    <div class="container">
+        <div class="xc-sec-heading">
+            <h3 class="xc-sec-heading__title"><span><i class="icon-power"></i></span>Recommended Items</h3>
+        </div>
+        <div class="row gutter-y-20 row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-4">
+            @if (ViewBag.Products != null)
+            {
+                foreach (var product in ViewBag.Products)
+                {
+                    <div class="col">
+                        <div class="xc-product-two__item border p-3 rounded text-center bg-white shadow-sm h-100 d-flex flex-column justify-content-between">
+                            <div>
+                                @if (product.PriceSale < product.Price)
+                                {
+                                    <span class="badge bg-danger float-start">SALE</span>
+                                }
+                                <div class="xc-product-two__img my-3">
+                                    <a asp-controller="Product" asp-action="Details" asp-route-id="@product.Id">
+                                        <img src="~/img/products/@product.Photo" alt="@product.Name" style="height: 150px; object-fit: contain;">
+                                    </a>
+                                </div>
+                                <div class="xc-product-two__ratting text-warning mb-2" style="font-size: 12px;">
+                                    <i class="icon-star"></i>
+                                    <i class="icon-star"></i>
+                                    <i class="icon-star"></i>
+                                    <i class="icon-star"></i>
+                                    <i class="icon-star"></i>
+                                    (12)
+                                </div>
+                                <h3 class="xc-product-two__title" style="font-size: 15px; font-weight: 600; line-height: 1.4; height: 42px; overflow: hidden; margin-bottom: 10px;">
+                                    <a asp-controller="Product" asp-action="Details" asp-route-id="@product.Id">@product.Name</a>
+                                </h3>
+                            </div>
+                            <div>
+                                <h4 class="xc-product-two__price mb-3">
+                                    @if (product.PriceSale < product.Price)
+                                    {
+                                        <span style="text-decoration: line-through; font-size: 13px; color: #888; margin-right: 5px;">$@product.Price</span>
+                                        <span class="text-danger" style="font-weight: 700; font-size: 16px;">$@product.PriceSale</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-dark" style="font-weight: 700; font-size: 16px;">$@product.Price</span>
+                                    }
+                                </h4>
+                                <div class="d-flex justify-content-center gap-2">
+                                    <a class="btn btn-outline-secondary btn-sm" asp-controller="Product" asp-action="Details" asp-route-id="@product.Id"><i class="icon-eye"></i> View</a>
+                                    <a class="btn btn-primary btn-sm text-white" asp-controller="Cart" asp-action="AddToCart" asp-route-id="@product.Id"><i class="icon-grocery-store"></i> Add to Cart</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</div>
+<!-- product two end -->

@@ -26,6 +26,14 @@ namespace PhoneShop.Controllers
             {
                 return NotFound();
             }
+
+            // Lấy featured products (trừ sản phẩm hiện tại) để hiển thị related
+            var featuredProducts = await _context.Products
+                .Where(p => p.Featured == true && p.Id != id)
+                .Take(4)
+                .ToListAsync();
+
+            ViewBag.FeaturedProducts = featuredProducts;
             return View(product);
         }
     }

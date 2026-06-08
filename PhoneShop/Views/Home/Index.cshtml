@@ -12,7 +12,6 @@
     </div>
 </div>
 <!-- banner one end -->
-
 <!-- offer one start -->
 <div class="xc-offer-one pb-80">
     <div class="container">
@@ -72,7 +71,6 @@
 <!-- featured start -->
 <div class="xc-featured pb-80">
     <div class="container">
-
         <div class="xc-sec-heading">
             <h3 class="xc-sec-heading__title">
                 <span><i class="icon-star"></i></span>
@@ -81,17 +79,17 @@
         </div>
 
         <div class="row">
-            @if (ViewBag.Products != null)
+            @{
+                var featuredList = ViewBag.FeaturedProducts as List<PhoneShop.Models.Product>;
+                var displayList = (featuredList != null && featuredList.Count > 0)
+                    ? featuredList
+                    : (ViewBag.Products as List<PhoneShop.Models.Product>)?.Take(4).ToList();
+            }
+
+            @if (displayList != null && displayList.Count > 0)
             {
-                int featuredCount = 0;
-
-                foreach (var product in ViewBag.Products)
+                foreach (var product in displayList)
                 {
-                    if (featuredCount++ >= 4)
-                    {
-                        break;
-                    }
-
                     <div class="col-lg-3 col-md-6 mb-4">
                         <div class="card h-100 border-0 shadow-sm">
 
@@ -105,6 +103,10 @@
                             </a>
 
                             <div class="card-body text-center">
+                                @if (product.Featured == true)
+                                {
+                                    <span class="badge bg-warning text-dark mb-2">⭐ Featured</span>
+                                }
 
                                 <h5 class="card-title">
                                     <a asp-controller="Product"
@@ -118,36 +120,28 @@
                                 @if (product.PriceSale < product.Price)
                                 {
                                     <div>
-                                        <del class="text-muted">
-                                            $@product.Price
-                                        </del>
+                                        <del class="text-muted">$@product.Price</del>
                                     </div>
-
-                                    <div class="text-danger fw-bold fs-5">
-                                        $@product.PriceSale
-                                    </div>
+                                    <div class="text-danger fw-bold fs-5">$@product.PriceSale</div>
                                 }
                                 else
                                 {
-                                    <div class="text-primary fw-bold fs-5">
-                                        $@product.Price
-                                    </div>
+                                    <div class="text-primary fw-bold fs-5">$@product.Price</div>
                                 }
                             </div>
 
-                            <div class="card-footer bg-white border-0 text-center">
+                            <div class="card-footer bg-white border-0 text-center pb-3">
                                 <a asp-controller="Product"
                                    asp-action="Details"
                                    asp-route-id="@product.Id"
                                    class="btn btn-outline-primary btn-sm">
-                                    View
+                                    <i class="icon-eye"></i> View
                                 </a>
-
                                 <a asp-controller="Cart"
                                    asp-action="AddToCart"
                                    asp-route-id="@product.Id"
                                    class="btn btn-primary btn-sm">
-                                    Add To Cart
+                                    <i class="icon-grocery-store"></i> Add To Cart
                                 </a>
                             </div>
 
@@ -155,12 +149,17 @@
                     </div>
                 }
             }
+            else
+            {
+                <div class="col-12 text-center py-4 text-muted">
+                    <p>No featured products available.</p>
+                </div>
+            }
         </div>
 
     </div>
 </div>
 <!-- featured end -->
-
 <!-- sale one start -->
 <div class="xc-sale-one pb-80">
     <div class="container">
@@ -202,7 +201,6 @@
     </div>
 </div>
 <!-- sale one end -->
-
 <!-- product two start (Recommended) -->
 <div class="xc-product-two pb-80">
     <div class="container">
@@ -285,7 +283,7 @@
                             </div>
 
                         </div>
-                    </div>  
+                    </div>
                 }
             }
         </div>

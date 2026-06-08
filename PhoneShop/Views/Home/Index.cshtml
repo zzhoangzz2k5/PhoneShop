@@ -6,86 +6,8 @@
 <div class="xc-banner-one pt-20 pb-40">
     <div class="container">
         <div class="row">
-            <div class="col-xl-3 col-xxl-2 d-none d-xl-block">
-                <div class="xc-banner-one__cat">
-                    <ul>
-                        @if (ViewBag.Categories != null)
-                        {
-                            foreach (var category in ViewBag.Categories)
-                            {
-                                <li><a href="#">@category.Name</a></li>
-                            }
-                        }
-                        else
-                        {
-                            <li><a href="#">Fashion & Accessories</a></li>
-                            <li><a href="#">Sports & Entertainment</a></li>
-                            <li><a href="#">Health & Beauty</a></li>
-                            <li><a href="#">Digital & Electronics</a></li>
-                            <li><a href="#">Tools, Equipment</a></li>
-                            <li><a href="#">Sports and Outdoor</a></li>
-                            <li><a href="#">Travel & Accessories</a></li>
-                            <li><a href="#">Machinery tools</a></li>
-                            <li><a href="#">More category</a></li>
-                        }
-                    </ul>
-                </div>
-            </div>
-            <div class="col-12 col-xl-9 col-xxl-10">
-                <div class="xc-main-slider">
-                    <div class="xc-main-slider__carousel swiftcart-owl__carousel owl-carousel" data-owl-options='{
-                        "loop" : true,
-                        "animateOut" : "fadeOut" ,
-                        "animateIn" : "fadeIn" ,
-                        "items" : 1,
-                        "autoplay" : true,
-                        "autoplayTimeout" : 7000,
-                        "smartSpeed" : 1000,
-                        "nav" : false,
-                        "navText" : ["<span class=\"fa-solid fa-chevron-left\"></span>","<span class=\"fa-solid fa-chevron-right\"></span>"],
-                        "dots": false,
-                        "margin": 0
-                        }'>
-
-                        <div class="xc-main-slider__item item">
-                            <div class="xc-main-slider__left">
-                                <div class="xc-main-slider__content">
-                                    <span class="xc-main-slider__subtitle">INTRODUCING NEW</span>
-                                    <h3 class="xc-main-slider__title">Xiaomi Mi 11 Ultra <br> 12GB+256GB</h3>
-                                    <p class="xc-main-slider__info">*Data provided by internal laboratories. Industry measurement.</p>
-                                    <div class="xc-main-slider__btn">
-                                        <a class="swiftcart-btn" asp-controller="Product" asp-action="Details" asp-route-id="5">Shop now <i class="icon-next"></i></a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="xc-main-slider__right">
-                                <div class="xc-main-slider__img">
-                                    <img src="~/img/slider/slider-1-1.png" alt="mobile">
-                                    <span class="xc-main-slider__price">$590</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="xc-main-slider__item item">
-                            <div class="xc-main-slider__left">
-                                <div class="xc-main-slider__content">
-                                    <span class="xc-main-slider__subtitle">INTRODUCING NEW</span>
-                                    <h3 class="xc-main-slider__title">iPhone 14 Pro Max <br> 256GB</h3>
-                                    <p class="xc-main-slider__info">Dynamic Island, A16 Bionic chip, 48MP Pro Camera.</p>
-                                    <div class="xc-main-slider__btn">
-                                        <a class="swiftcart-btn" asp-controller="Product" asp-action="Details" asp-route-id="1">Shop now <i class="icon-next"></i></a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="xc-main-slider__right">
-                                <div class="xc-main-slider__img">
-                                    <img src="~/img/slider/slider-1-2.png" alt="mobile">
-                                    <span class="xc-main-slider__price">$999</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <partial name="Partials/_HomeSideBar" />
+            <partial name="Partials/_HomeTop" />
         </div>
     </div>
 </div>
@@ -147,6 +69,97 @@
     </div>
 </div>
 <!-- offer one end -->
+<!-- featured start -->
+<div class="xc-featured pb-80">
+    <div class="container">
+
+        <div class="xc-sec-heading">
+            <h3 class="xc-sec-heading__title">
+                <span><i class="icon-star"></i></span>
+                Featured Products
+            </h3>
+        </div>
+
+        <div class="row">
+            @if (ViewBag.Products != null)
+            {
+                int featuredCount = 0;
+
+                foreach (var product in ViewBag.Products)
+                {
+                    if (featuredCount++ >= 4)
+                    {
+                        break;
+                    }
+
+                    <div class="col-lg-3 col-md-6 mb-4">
+                        <div class="card h-100 border-0 shadow-sm">
+
+                            <a asp-controller="Product"
+                               asp-action="Details"
+                               asp-route-id="@product.Id">
+                                <img src="~/img/products/@product.Photo"
+                                     class="card-img-top p-3"
+                                     style="height:220px;object-fit:contain;"
+                                     alt="@product.Name">
+                            </a>
+
+                            <div class="card-body text-center">
+
+                                <h5 class="card-title">
+                                    <a asp-controller="Product"
+                                       asp-action="Details"
+                                       asp-route-id="@product.Id"
+                                       class="text-dark text-decoration-none">
+                                        @product.Name
+                                    </a>
+                                </h5>
+
+                                @if (product.PriceSale < product.Price)
+                                {
+                                    <div>
+                                        <del class="text-muted">
+                                            $@product.Price
+                                        </del>
+                                    </div>
+
+                                    <div class="text-danger fw-bold fs-5">
+                                        $@product.PriceSale
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="text-primary fw-bold fs-5">
+                                        $@product.Price
+                                    </div>
+                                }
+                            </div>
+
+                            <div class="card-footer bg-white border-0 text-center">
+                                <a asp-controller="Product"
+                                   asp-action="Details"
+                                   asp-route-id="@product.Id"
+                                   class="btn btn-outline-primary btn-sm">
+                                    View
+                                </a>
+
+                                <a asp-controller="Cart"
+                                   asp-action="AddToCart"
+                                   asp-route-id="@product.Id"
+                                   class="btn btn-primary btn-sm">
+                                    Add To Cart
+                                </a>
+                            </div>
+
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+
+    </div>
+</div>
+<!-- featured end -->
 
 <!-- sale one start -->
 <div class="xc-sale-one pb-80">
@@ -194,8 +207,12 @@
 <div class="xc-product-two pb-80">
     <div class="container">
         <div class="xc-sec-heading">
-            <h3 class="xc-sec-heading__title"><span><i class="icon-power"></i></span>Recommended Items</h3>
+            <h3 class="xc-sec-heading__title">
+                <span><i class="icon-power"></i></span>
+                Recommended Items
+            </h3>
         </div>
+
         <div class="row gutter-y-20 row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-4">
             @if (ViewBag.Products != null)
             {
@@ -203,17 +220,24 @@
                 {
                     <div class="col">
                         <div class="xc-product-two__item border p-3 rounded text-center bg-white shadow-sm h-100 d-flex flex-column justify-content-between">
+
                             <div>
                                 @if (product.PriceSale < product.Price)
                                 {
                                     <span class="badge bg-danger float-start">SALE</span>
                                 }
+
                                 <div class="xc-product-two__img my-3">
-                                    <a asp-controller="Product" asp-action="Details" asp-route-id="@product.Id">
-                                        <img src="~/img/products/@product.Photo" alt="@product.Name" style="height: 150px; object-fit: contain;">
+                                    <a asp-controller="Product"
+                                       asp-action="Details"
+                                       asp-route-id="@product.Id">
+                                        <img src="~/img/products/@product.Photo"
+                                             alt="@product.Name"
+                                             style="height:150px;object-fit:contain;">
                                     </a>
                                 </div>
-                                <div class="xc-product-two__ratting text-warning mb-2" style="font-size: 12px;">
+
+                                <div class="xc-product-two__ratting text-warning mb-2">
                                     <i class="icon-star"></i>
                                     <i class="icon-star"></i>
                                     <i class="icon-star"></i>
@@ -221,29 +245,47 @@
                                     <i class="icon-star"></i>
                                     (12)
                                 </div>
-                                <h3 class="xc-product-two__title" style="font-size: 15px; font-weight: 600; line-height: 1.4; height: 42px; overflow: hidden; margin-bottom: 10px;">
-                                    <a asp-controller="Product" asp-action="Details" asp-route-id="@product.Id">@product.Name</a>
+
+                                <h3 class="xc-product-two__title"
+                                    style="font-size:15px;font-weight:600;height:42px;overflow:hidden;">
+                                    <a asp-controller="Product"
+                                       asp-action="Details"
+                                       asp-route-id="@product.Id">
+                                        @product.Name
+                                    </a>
                                 </h3>
                             </div>
+
                             <div>
-                                <h4 class="xc-product-two__price mb-3">
+                                <h4 class="xc-product-two__price">
                                     @if (product.PriceSale < product.Price)
                                     {
-                                        <span style="text-decoration: line-through; font-size: 13px; color: #888; margin-right: 5px;">$@product.Price</span>
-                                        <span class="text-danger" style="font-weight: 700; font-size: 16px;">$@product.PriceSale</span>
+                                        <del>$@product.Price</del>
+                                        <span>$@product.PriceSale</span>
                                     }
                                     else
                                     {
-                                        <span class="text-dark" style="font-weight: 700; font-size: 16px;">$@product.Price</span>
+                                        <span>$@product.Price</span>
                                     }
                                 </h4>
-                                <div class="d-flex justify-content-center gap-2">
-                                    <a class="btn btn-outline-secondary btn-sm" asp-controller="Product" asp-action="Details" asp-route-id="@product.Id"><i class="icon-eye"></i> View</a>
-                                    <a class="btn btn-primary btn-sm text-white" asp-controller="Cart" asp-action="AddToCart" asp-route-id="@product.Id"><i class="icon-grocery-store"></i> Add to Cart</a>
+
+                                <div class="xc-product-two__btn">
+                                    <a asp-controller="Product"
+                                       asp-action="Details"
+                                       asp-route-id="@product.Id">
+                                        <i class="icon-eye"></i>
+                                    </a>
+
+                                    <a asp-controller="Cart"
+                                       asp-action="AddToCart"
+                                       asp-route-id="@product.Id">
+                                        <i class="icon-grocery-store"></i>
+                                    </a>
                                 </div>
                             </div>
+
                         </div>
-                    </div>
+                    </div>  
                 }
             }
         </div>

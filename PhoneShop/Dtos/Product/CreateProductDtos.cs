@@ -1,26 +1,21 @@
-﻿using PhoneStore.Models;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
-namespace PhoneStore.Dtos.Product
+namespace PhoneShop.Dtos.Product;
+
+public class CreateProductRequest
 {
-    public class CreateProductRequest
-    {
-        [Required(ErrorMessage ="Please input Product Nane")]
+    [Required(ErrorMessage = "Please input Product Name")]
+    public string? Name { get; set; }
 
-        public string? Name { get; set; }
-        public string? Description { get; set; }
-        [Range(0, double.MaxValue, ErrorMessage = "Price must be a positive value")]
+    public string? Description { get; set; }
 
-        public decimal? Price { get; set; }
+    [Range(0, double.MaxValue, ErrorMessage = "Price must be a non-negative value")]
+    public decimal? Price { get; set; }
 
-        public decimal? PriceSale { get; set; }
+    [Range(0, double.MaxValue, ErrorMessage = "Sale price must be a non-negative value")]
+    public decimal? PriceSale { get; set; }
 
-
-        public IFormFile? Photo { get; set; }
-
-
-        public int? CategoryId { get; set; }
-
-    }
+    public IFormFile? Photo { get; set; }
+    public int? CategoryId { get; set; }
+    public bool Featured { get; set; }
 }

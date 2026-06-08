@@ -80,7 +80,10 @@
                                 @Html.DisplayFor(m => item.Category!.Name)
                             </td>
                             <td>
-                                Hinh
+                                @if (!string.IsNullOrWhiteSpace(item.Photo))
+                                {
+                                    <img src="~/img/products/@item.Photo" alt="@item.Name" style="width:100px;height:80px;object-fit:contain;" />
+                                }
                             </td>
                             <td class="project-actions text-right">
                                 <a class="btn btn-primary btn-sm" href="#">

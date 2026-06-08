@@ -57,6 +57,9 @@ namespace PhoneShop.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool?>("Featured")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(200)");
 
@@ -68,6 +71,9 @@ namespace PhoneShop.Migrations
 
                     b.Property<decimal?>("PriceSale")
                         .HasColumnType("money");
+
+                    b.Property<string>("Slug")
+                        .HasColumnType("nvarchar(200)");
 
                     b.HasKey("Id");
 

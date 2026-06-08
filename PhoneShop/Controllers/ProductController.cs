@@ -26,15 +26,22 @@ namespace PhoneShop.Controllers
             {
                 return NotFound();
             }
-
-            // Lấy featured products (trừ sản phẩm hiện tại) để hiển thị related
-            var featuredProducts = await _context.Products
-                .Where(p => p.Featured == true && p.Id != id)
-                .Take(4)
-                .ToListAsync();
-
-            ViewBag.FeaturedProducts = featuredProducts;
             return View(product);
+        }
+
+        [HttpGet("/Product/{slug}")]
+        public async Task<IActionResult> DetailsBySlug(string slug)
+        {
+            var product = await _context.Products
+                .Include(p => p.Category)
+                .FirstOrDefaultAsync(p => p.Slug == slug);
+
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            return View("Details", product);
         }
     }
 }

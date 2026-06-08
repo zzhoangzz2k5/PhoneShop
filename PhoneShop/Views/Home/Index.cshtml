@@ -12,6 +12,7 @@
     </div>
 </div>
 <!-- banner one end -->
+
 <!-- offer one start -->
 <div class="xc-offer-one pb-80">
     <div class="container">
@@ -52,7 +53,7 @@
                                             <div class="xc-offer-one__cat text-center p-3 border rounded bg-light">
                                                 <img src="~/img/products/@product.Photo" alt="@product.Name" style="max-height: 80px; object-fit: contain; margin-bottom: 10px;">
                                                 <h4 class="xc-offer-one__cat-title" style="font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 5px;">
-                                                    <a asp-controller="Product" asp-action="Details" asp-route-id="@product.Id">@product.Name</a>
+                                                    <a asp-controller="Product" asp-action="DetailsBySlug" asp-route-slug="@product.Slug">@product.Name</a>
                                                 </h4>
                                                 <span class="badge bg-danger">-@discount%</span>
                                             </div>
@@ -71,6 +72,7 @@
 <!-- featured start -->
 <div class="xc-featured pb-80">
     <div class="container">
+
         <div class="xc-sec-heading">
             <h3 class="xc-sec-heading__title">
                 <span><i class="icon-star"></i></span>
@@ -79,23 +81,16 @@
         </div>
 
         <div class="row">
-            @{
-                var featuredList = ViewBag.FeaturedProducts as List<PhoneShop.Models.Product>;
-                var displayList = (featuredList != null && featuredList.Count > 0)
-                    ? featuredList
-                    : (ViewBag.Products as List<PhoneShop.Models.Product>)?.Take(4).ToList();
-            }
-
-            @if (displayList != null && displayList.Count > 0)
+            @if (ViewBag.Featured != null)
             {
-                foreach (var product in displayList)
+                foreach (var product in ViewBag.Featured)
                 {
                     <div class="col-lg-3 col-md-6 mb-4">
                         <div class="card h-100 border-0 shadow-sm">
 
                             <a asp-controller="Product"
-                               asp-action="Details"
-                               asp-route-id="@product.Id">
+                               asp-action="DetailsBySlug"
+                               asp-route-slug="@product.Slug">
                                 <img src="~/img/products/@product.Photo"
                                      class="card-img-top p-3"
                                      style="height:220px;object-fit:contain;"
@@ -103,15 +98,11 @@
                             </a>
 
                             <div class="card-body text-center">
-                                @if (product.Featured == true)
-                                {
-                                    <span class="badge bg-warning text-dark mb-2">⭐ Featured</span>
-                                }
 
                                 <h5 class="card-title">
                                     <a asp-controller="Product"
-                                       asp-action="Details"
-                                       asp-route-id="@product.Id"
+                                       asp-action="DetailsBySlug"
+                                       asp-route-slug="@product.Slug"
                                        class="text-dark text-decoration-none">
                                         @product.Name
                                     </a>
@@ -120,28 +111,36 @@
                                 @if (product.PriceSale < product.Price)
                                 {
                                     <div>
-                                        <del class="text-muted">$@product.Price</del>
+                                        <del class="text-muted">
+                                            $@product.Price
+                                        </del>
                                     </div>
-                                    <div class="text-danger fw-bold fs-5">$@product.PriceSale</div>
+
+                                    <div class="text-danger fw-bold fs-5">
+                                        $@product.PriceSale
+                                    </div>
                                 }
                                 else
                                 {
-                                    <div class="text-primary fw-bold fs-5">$@product.Price</div>
+                                    <div class="text-primary fw-bold fs-5">
+                                        $@product.Price
+                                    </div>
                                 }
                             </div>
 
-                            <div class="card-footer bg-white border-0 text-center pb-3">
+                            <div class="card-footer bg-white border-0 text-center">
                                 <a asp-controller="Product"
-                                   asp-action="Details"
-                                   asp-route-id="@product.Id"
+                                   asp-action="DetailsBySlug"
+                                   asp-route-slug="@product.Slug"
                                    class="btn btn-outline-primary btn-sm">
-                                    <i class="icon-eye"></i> View
+                                    View
                                 </a>
+
                                 <a asp-controller="Cart"
                                    asp-action="AddToCart"
                                    asp-route-id="@product.Id"
                                    class="btn btn-primary btn-sm">
-                                    <i class="icon-grocery-store"></i> Add To Cart
+                                    Add To Cart
                                 </a>
                             </div>
 
@@ -149,17 +148,12 @@
                     </div>
                 }
             }
-            else
-            {
-                <div class="col-12 text-center py-4 text-muted">
-                    <p>No featured products available.</p>
-                </div>
-            }
         </div>
 
     </div>
 </div>
 <!-- featured end -->
+
 <!-- sale one start -->
 <div class="xc-sale-one pb-80">
     <div class="container">
@@ -183,12 +177,12 @@
                                 if (count++ >= 6) break;
                                 <div class="col-6 col-sm-4 col-md-3 col-lg-2">
                                     <div class="xc-product-one__item text-center p-2 border rounded">
-                                        <a asp-controller="Product" asp-action="Details" asp-route-id="@product.Id">
+                                        <a asp-controller="Product" asp-action="DetailsBySlug" asp-route-slug="@product.Slug">
                                             <img src="~/img/products/@product.Photo" alt="@product.Name" style="height: 100px; object-fit: contain; margin-bottom: 8px;">
                                         </a>
                                         <h5 class="xc-product-one__price text-primary font-weight-bold" style="font-size: 14px;">$@product.PriceSale</h5>
                                         <h4 class="xc-product-one__title" style="font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 5px;">
-                                            <a asp-controller="Product" asp-action="Details" asp-route-id="@product.Id">@product.Name</a>
+                                            <a asp-controller="Product" asp-action="DetailsBySlug" asp-route-slug="@product.Slug">@product.Name</a>
                                         </h4>
                                     </div>
                                 </div>
@@ -201,6 +195,7 @@
     </div>
 </div>
 <!-- sale one end -->
+
 <!-- product two start (Recommended) -->
 <div class="xc-product-two pb-80">
     <div class="container">
@@ -227,8 +222,8 @@
 
                                 <div class="xc-product-two__img my-3">
                                     <a asp-controller="Product"
-                                       asp-action="Details"
-                                       asp-route-id="@product.Id">
+                                       asp-action="DetailsBySlug"
+                                       asp-route-slug="@product.Slug">
                                         <img src="~/img/products/@product.Photo"
                                              alt="@product.Name"
                                              style="height:150px;object-fit:contain;">
@@ -247,8 +242,8 @@
                                 <h3 class="xc-product-two__title"
                                     style="font-size:15px;font-weight:600;height:42px;overflow:hidden;">
                                     <a asp-controller="Product"
-                                       asp-action="Details"
-                                       asp-route-id="@product.Id">
+                                       asp-action="DetailsBySlug"
+                                       asp-route-slug="@product.Slug">
                                         @product.Name
                                     </a>
                                 </h3>
@@ -269,8 +264,8 @@
 
                                 <div class="xc-product-two__btn">
                                     <a asp-controller="Product"
-                                       asp-action="Details"
-                                       asp-route-id="@product.Id">
+                                       asp-action="DetailsBySlug"
+                                       asp-route-slug="@product.Slug">
                                         <i class="icon-eye"></i>
                                     </a>
 
@@ -283,7 +278,7 @@
                             </div>
 
                         </div>
-                    </div>
+                    </div>  
                 }
             }
         </div>

@@ -19,11 +19,16 @@ namespace PhoneShop.Controllers
         {
             var categories = await _context.Categories.ToListAsync();
             var products = await _context.Products.ToListAsync();
-            var featuredProducts = products.Where(p => p.Featured == true).ToList();
+            var featured = products.Where(p => p.Featured == true).Take(4).ToList();
+
+            if (featured.Count == 0)
+            {
+                featured = products.Take(4).ToList();
+            }
 
             ViewBag.Categories = categories;
             ViewBag.Products = products;
-            ViewBag.FeaturedProducts = featuredProducts;
+            ViewBag.Featured = featured;
             return View();
         }
 

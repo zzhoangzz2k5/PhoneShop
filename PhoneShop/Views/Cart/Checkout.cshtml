@@ -1,4 +1,4 @@
-@model List<PhoneShop.Models.CartItem>
+@model PhoneShop.Models.CheckoutViewModel
 
 <!-- xc-breadcrumb area start -->
 <div class="xc-breadcrumb__area base-bg">
@@ -22,7 +22,7 @@
 <!-- checkout-area start -->
 <section class="checkout-area pt-80 pb-85">
     <div class="container">
-        <form method="post" asp-controller="Cart" asp-action="PlaceOrder">
+        <form method="post" asp-controller="Cart" asp-action="CreatePayPalOrder" id="checkout-form" onsubmit="return false;">
             <div class="row">
                 <div class="col-lg-8">
                     <div class="checkbox-form">
@@ -80,39 +80,40 @@
                                     <div class="accordion-body">
                                         <div class="cart-subtitle">
                                             <h4>Subtotal</h4>
-                                            <h4>$@(Model.Sum(i => i.SubTotal).ToString("F2"))</h4>
+                                            <h4>@Model.Currency @(Model.CartItems.Sum(i => i.SubTotal).ToString("F2"))</h4>
                                         </div>
                                         <div class="cart-checkout">
                                             <h4>Items</h4>
                                             <ul class="list-unstyled">
-                                                @foreach (var item in Model)
+                                                @foreach (var item in Model.CartItems)
                                                 {
                                                     <li class="d-flex justify-content-between py-1" style="font-size: 14px;">
                                                         <span class="text-muted">@item.Name x @item.Quantity</span>
-                                                        <span>$@item.SubTotal.ToString("F2")</span>
+                                                        <span>@Model.Currency @item.SubTotal.ToString("F2")</span>
                                                     </li>
                                                 }
                                             </ul>
                                         </div>
                                         <div class="cart-checkout">
                                             <h4>Payment Method</h4>
-                                            <div class="shop__widget-list">
-                                                <div class="shop__widget-list-item-2">
-                                                    <input type="radio" name="opt" id="p-rate" checked>
-                                                    <label for="p-rate">Cash on delivery</label>
-                                                </div>
-                                                <div class="shop__widget-list-item-2 has-orange">
-                                                    <input type="radio" name="opt" id="c-shipping">
-                                                    <label for="c-shipping">Direct bank transfer</label>
-                                                </div>
-                                            </div>
+                                            <p class="small text-muted mb-2">Pay securely with PayPal.</p>
                                         </div>
                                         <div class="cart-totails">
                                             <h4>Total</h4>
-                                            <h4>$@(Model.Sum(i => i.SubTotal).ToString("F2"))</h4>
+                                            <h4>@Model.Currency @(Model.CartItems.Sum(i => i.SubTotal).ToString("F2"))</h4>
                                         </div>
-                                        <p class="small text-muted mb-3">Please review your billing address and order items before placing the order.</p>
-                                        <button type="submit" class="cart-checkout-btn w-100 border-0 text-center">Place Order</button>
+                                        <p class="small text-muted mb-3">Complete your billing details, then approve the payment in PayPal.</p>
+                                        <div id="paypal-message" class="alert d-none" role="alert"></div>
+                                        @if (Model.IsPayPalConfigured)
+                                        {
+                                            <div id="paypal-button-container"></div>
+                                        }
+                                        else
+                                        {
+                                            <div class="alert alert-warning mb-0">
+                                                PayPal is not configured. Add the sandbox Client ID and Client Secret to User Secrets.
+                                            </div>
+                                        }
                                     </div>
                                 </div>
                             </div>
@@ -124,3 +125,80 @@
     </div>
 </section>
 <!-- checkout-area end -->
+
+@if (Model.IsPayPalConfigured)
+{
+    var paypalSdkUrl = $"https://www.paypal.com/sdk/js?client-id={Uri.EscapeDataString(Model.PayPalClientId)}&currency={Uri.EscapeDataString(Model.Currency)}&components=buttons";
+
+    @section Scripts {
+        <script src="@paypalSdkUrl"></script>
+        <script>
+            (() => {
+                const form = document.getElementById('checkout-form');
+                const message = document.getElementById('paypal-message');
+                let checkoutToken = '';
+
+                const showMessage = (text, type = 'danger') => {
+                    message.textContent = text;
+                    message.className = `alert alert-${type}`;
+                };
+
+                const readJson = async response => {
+                    const result = await response.json().catch(() => ({}));
+                    if (!response.ok) {
+                        throw new Error(result.message || 'The payment request could not be completed.');
+                    }
+                    return result;
+                };
+
+                paypal.Buttons({
+                    style: {
+                        layout: 'vertical',
+                        color: 'gold',
+                        shape: 'rect',
+                        label: 'paypal'
+                    },
+                    onClick(data, actions) {
+                        message.className = 'alert d-none';
+                        if (!form.checkValidity()) {
+                            form.reportValidity();
+                            return actions.reject();
+                        }
+                        return actions.resolve();
+                    },
+                    async createOrder() {
+                        showMessage('Connecting to PayPal...', 'info');
+                        const response = await fetch('@Url.Action("CreatePayPalOrder", "Cart")', {
+                            method: 'POST',
+                            body: new FormData(form)
+                        });
+                        const order = await readJson(response);
+                        checkoutToken = order.checkoutToken;
+                        message.className = 'alert d-none';
+                        return order.id;
+                    },
+                    async onApprove(data) {
+                        showMessage('Confirming your payment...', 'info');
+                        const formData = new FormData(form);
+                        formData.append('payPalOrderId', data.orderID);
+                        formData.append('checkoutToken', checkoutToken);
+
+                        const response = await fetch('@Url.Action("CapturePayPalOrder", "Cart")', {
+                            method: 'POST',
+                            body: formData
+                        });
+                        const result = await readJson(response);
+                        window.location.assign(result.successUrl);
+                    },
+                    onCancel() {
+                        showMessage('The PayPal payment was cancelled.', 'warning');
+                    },
+                    onError(error) {
+                        console.error(error);
+                        showMessage(error.message || 'PayPal could not complete the payment.');
+                    }
+                }).render('#paypal-button-container');
+            })();
+        </script>
+    }
+}

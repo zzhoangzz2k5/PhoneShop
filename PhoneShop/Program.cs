@@ -1,10 +1,15 @@
 using Microsoft.EntityFrameworkCore;
+using PhoneShop.Configuration;
 using PhoneShop.DB;
+using PhoneShop.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add db to the container.
 builder.Services.AddDbContext<PhoneShopDbContext>(o => o.UseSqlServer(builder.Configuration.GetConnectionString("PhoneShopConnection")));
+builder.Services.Configure<PayPalOptions>(
+    builder.Configuration.GetSection(PayPalOptions.SectionName));
+builder.Services.AddHttpClient<IPayPalService, PayPalService>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();

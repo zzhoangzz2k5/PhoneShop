@@ -15,6 +15,7 @@ public interface IPayPalService
 
 public sealed record PayPalCaptureResult(
     string Status,
+    string CaptureId,
     decimal Amount,
     string Currency,
     string? PayerEmail);

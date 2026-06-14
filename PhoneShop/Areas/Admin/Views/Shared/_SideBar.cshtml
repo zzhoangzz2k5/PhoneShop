@@ -31,14 +31,19 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a a asp-action="Create" asp-controller="Product" asp-area="Admin" class="nav-link">
+                            <a asp-action="Create" asp-controller="Product" asp-area="Admin" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Create New</p>
                             </a>
                         </li>
                     </ul>
                 </li>
-                
+                <li class="nav-item">
+                    <a asp-action="Index" asp-controller="Order" asp-area="Admin" class="nav-link">
+                        <i class="nav-icon fas fa-shopping-cart"></i>
+                        <p>Order Management</p>
+                    </a>
+                </li>
             </ul>
         </nav>
         <!-- /.sidebar-menu -->

@@ -89,6 +89,7 @@ public sealed class PayPalService : IPayPalService
             .GetProperty("purchase_units")[0]
             .GetProperty("payments")
             .GetProperty("captures")[0];
+        var captureId = capture.GetProperty("id").GetString() ?? string.Empty;
         var amount = capture.GetProperty("amount");
         var amountValue = decimal.Parse(
             amount.GetProperty("value").GetString() ?? "0",
@@ -99,7 +100,7 @@ public sealed class PayPalService : IPayPalService
             ? email.GetString()
             : null;
 
-        return new PayPalCaptureResult(status, amountValue, currency, payerEmail);
+        return new PayPalCaptureResult(status, captureId, amountValue, currency, payerEmail);
     }
 
     private async Task<string> GetAccessTokenAsync(CancellationToken cancellationToken)

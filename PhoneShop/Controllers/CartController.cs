@@ -277,6 +277,49 @@ namespace PhoneShop.Controllers
                         new { message = "PayPal did not confirm the expected payment amount." });
                 }
 
+                var existingOrder = await _context.Orders
+                    .SingleOrDefaultAsync(
+                        order => order.PayPalOrderId == payPalOrderId,
+                        cancellationToken);
+                if (existingOrder == null)
+                {
+                    var cart = await GetVerifiedCartAsync();
+                    if (cart.Count == 0)
+                    {
+                        return BadRequest(new { message = "Your cart is empty." });
+                    }
+
+                    var order = new Orders
+                    {
+                        OrderDate = DateTime.Now,
+                        CustomerName = $"{draft.FirstName} {draft.LastName}".Trim(),
+                        ShippingPhone = draft.Phone,
+                        ShippingAddress = draft.Address,
+                        Email = draft.Email,
+                        Note = draft.Message,
+                        TotalAmount = draft.Total,
+                        Status = (int)OrderStatus.Processing,
+                        PaymentMethod = "PayPal",
+                        PaymentStatus = "Paid",
+                        PayPalOrderId = payPalOrderId,
+                        PayPalCaptureId = capture.CaptureId,
+                        OrderDetails = cart.Select(item => new OrdersDetails
+                        {
+                            ProductId = item.ProductId,
+                            Price = item.Price,
+                            Quantity = item.Quantity
+                        }).ToList()
+                    };
+
+                    _context.Orders.Add(order);
+                    await _context.SaveChangesAsync(cancellationToken);
+                    TempData["LocalOrderId"] = order.Id;
+                }
+                else
+                {
+                    TempData["LocalOrderId"] = existingOrder.Id;
+                }
+
                 Response.Cookies.Delete(CART_COOKIE_KEY);
                 TempData["OrderName"] = $"{draft.FirstName} {draft.LastName}";
                 TempData["OrderPhone"] = draft.Phone;
@@ -319,6 +362,7 @@ namespace PhoneShop.Controllers
             ViewBag.OrderTotal = total;
             ViewBag.OrderCurrency = TempData["OrderCurrency"];
             ViewBag.PayPalOrderId = TempData["PayPalOrderId"];
+            ViewBag.LocalOrderId = TempData["LocalOrderId"];
 
             return View();
         }

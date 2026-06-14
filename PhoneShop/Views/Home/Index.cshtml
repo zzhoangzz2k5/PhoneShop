@@ -1,8 +1,109 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+@{
+    ViewData["Title"] = "Home";
+    var products = (ViewBag.Products as IEnumerable<PhoneShop.Models.Product>)?.ToList()
+        ?? new List<PhoneShop.Models.Product>();
+    var featured = (ViewBag.Featured as IEnumerable<PhoneShop.Models.Product>)?.ToList()
+        ?? new List<PhoneShop.Models.Product>();
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<!-- banner one start -->
+<div class="xc-banner-one pt-20 pb-40">
+    <div class="container">
+        <div class="row">
+            <partial name="Partials/_HomeSideBar" />
+            <partial name="Partials/_HomeTop" />
+        </div>
+    </div>
 </div>
+<!-- banner one end -->
+
+@if (featured.Count > 0)
+{
+    <section class="xc-product-two pb-80">
+        <div class="container">
+            <div class="xc-sec-heading">
+                <h3 class="xc-sec-heading__title">
+                    <span><i class="icon-power"></i></span>Featured Products
+                </h3>
+            </div>
+            <div class="row gutter-y-20 row-cols-1 row-cols-sm-2 row-cols-lg-4">
+                @foreach (var item in featured)
+                {
+                    <partial name="Partials/_ProductCard" model="item" />
+                }
+            </div>
+        </div>
+    </section>
+}
+
+<section class="xc-product-two pb-80" id="all-products">
+    <div class="container">
+        <div class="xc-sec-heading xc-has-btn">
+            <h3 class="xc-sec-heading__title">
+                <span><i class="icon-power"></i></span>All Products
+            </h3>
+            <div class="xc-sec-heading__btn">
+                <a href="#all-products" class="xc-sec-heading-btn">Show all</a>
+            </div>
+        </div>
+
+        @if (products.Count == 0)
+        {
+            <div class="alert alert-info">No products are available.</div>
+        }
+        else
+        {
+            <div class="row gutter-y-20 row-cols-1 row-cols-sm-2 row-cols-lg-4 row-cols-xl-5">
+                @foreach (var item in products)
+                {
+                    <partial name="Partials/_ProductCard" model="item" />
+                }
+            </div>
+        }
+    </div>
+</section>
+
+<section class="xc-feature-one pb-80">
+    <div class="container">
+        <div class="xc-feature-one__wrap">
+            <div class="row gutter-y-20">
+                <div class="col-md-6 col-xl-3">
+                    <div class="xc-feature-one__item">
+                        <div class="xc-feature-one__icon"><i class="icon-box"></i></div>
+                        <div class="xc-feature-one__content">
+                            <h3 class="xc-feature-one__title">Fast Delivery</h3>
+                            <p>Reliable shipping for every order.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-xl-3">
+                    <div class="xc-feature-one__item">
+                        <div class="xc-feature-one__icon"><i class="icon-support"></i></div>
+                        <div class="xc-feature-one__content">
+                            <h3 class="xc-feature-one__title">Customer Support</h3>
+                            <p>Support when you need it.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-xl-3">
+                    <div class="xc-feature-one__item">
+                        <div class="xc-feature-one__icon"><i class="icon-credit-card"></i></div>
+                        <div class="xc-feature-one__content">
+                            <h3 class="xc-feature-one__title">Secure Payment</h3>
+                            <p>Pay safely with PayPal.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-xl-3">
+                    <div class="xc-feature-one__item">
+                        <div class="xc-feature-one__icon"><i class="icon-box"></i></div>
+                        <div class="xc-feature-one__content">
+                            <h3 class="xc-feature-one__title">Quality Products</h3>
+                            <p>Products selected for quality.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

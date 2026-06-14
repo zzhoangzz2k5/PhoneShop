@@ -1,0 +1,69 @@
+@{
+    var slides = (ViewBag.Featured as IEnumerable<PhoneShop.Models.Product>)?.Take(2).ToList()
+        ?? new List<PhoneShop.Models.Product>();
+}
+
+<div class="col-12 col-xl-9 col-xxl-10">
+    <div class="xc-main-slider">
+        <div class="xc-main-slider__carousel swiftcart-owl__carousel owl-carousel"
+             data-owl-options='{
+                "loop": true,
+                "animateOut": "fadeOut",
+                "animateIn": "fadeIn",
+                "items": 1,
+                "autoplay": true,
+                "autoplayTimeout": 7000,
+                "smartSpeed": 1000,
+                "nav": false,
+                "dots": false,
+                "margin": 0
+             }'>
+            @foreach (var product in slides)
+            {
+                var price = product.PriceSale ?? product.Price ?? 0;
+                <div class="xc-main-slider__item item">
+                    <div class="xc-main-slider__left">
+                        <div class="xc-main-slider__content">
+                            <span class="xc-main-slider__subtitle">FEATURED PRODUCT</span>
+                            <h3 class="xc-main-slider__title">@product.Name</h3>
+                            <p class="xc-main-slider__info">
+                                @(string.IsNullOrWhiteSpace(product.Description)
+                                    ? "Discover this product at PhoneShop."
+                                    : product.Description)
+                            </p>
+                            <div class="xc-main-slider__btn">
+                                <a class="swiftcart-btn"
+                                   asp-controller="Product"
+                                   asp-action="Details"
+                                   asp-route-id="@product.Id">
+                                    Shop now <i class="icon-next"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="xc-main-slider__right">
+                        <div class="xc-main-slider__img">
+                            <img src="~/img/products/@product.Photo"
+                                 alt="@product.Name"
+                                 style="max-height: 390px; object-fit: contain;">
+                            <span class="xc-main-slider__price">$@price.ToString("F2")</span>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            @if (slides.Count == 0)
+            {
+                <div class="xc-main-slider__item item">
+                    <div class="xc-main-slider__left">
+                        <div class="xc-main-slider__content">
+                            <span class="xc-main-slider__subtitle">WELCOME</span>
+                            <h3 class="xc-main-slider__title">PhoneShop</h3>
+                            <p class="xc-main-slider__info">Products will appear here when available.</p>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

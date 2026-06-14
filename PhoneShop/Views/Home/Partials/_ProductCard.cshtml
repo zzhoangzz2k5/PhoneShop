@@ -1,0 +1,63 @@
+@model PhoneShop.Models.Product
+
+@{
+    var price = Model.PriceSale ?? Model.Price ?? 0;
+    var hasSale = Model.PriceSale.HasValue &&
+                  Model.Price.HasValue &&
+                  Model.PriceSale.Value < Model.Price.Value;
+}
+
+<div class="col">
+    <div class="xc-product-two__item h-100">
+        @if (hasSale)
+        {
+            <span class="xc-product-two__deal">SALE</span>
+        }
+
+        <div class="xc-product-two__img">
+            <a asp-controller="Product" asp-action="Details" asp-route-id="@Model.Id">
+                <img src="~/img/products/@Model.Photo"
+                     alt="@Model.Name"
+                     style="height: 210px; width: 100%; object-fit: contain;">
+            </a>
+        </div>
+
+        <div class="xc-product-two__ratting">
+            <i class="icon-star"></i>
+            <i class="icon-star"></i>
+            <i class="icon-star"></i>
+            <i class="icon-star"></i>
+            <i class="icon-star"></i>
+        </div>
+
+        <h3 class="xc-product-two__title">
+            <a asp-controller="Product" asp-action="Details" asp-route-id="@Model.Id">
+                @Model.Name
+            </a>
+        </h3>
+
+        <h4 class="xc-product-two__price">
+            $@price.ToString("F2")
+            @if (hasSale)
+            {
+                <del class="ms-2 text-muted">$@Model.Price!.Value.ToString("F2")</del>
+            }
+        </h4>
+
+        <div class="xc-product-two__btn">
+            <a asp-controller="Product"
+               asp-action="Details"
+               asp-route-id="@Model.Id"
+               aria-label="View @Model.Name">
+                <i class="icon-eye"></i>
+            </a>
+            <a asp-controller="Cart"
+               asp-action="AddToCart"
+               asp-route-id="@Model.Id"
+               asp-route-returnUrl="@Context.Request.Path"
+               aria-label="Add @Model.Name to cart">
+                <i class="icon-grocery-store"></i>
+            </a>
+        </div>
+    </div>
+</div>
